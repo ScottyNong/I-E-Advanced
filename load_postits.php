@@ -17,5 +17,7 @@ if (file_exists($file)) {
     fclose($handle);
 }
 
-echo json_encode($postIts);
+header('Content-Type: application/json');
+echo json_encode($postIts, JSON_PRETTY_PRINT);
+exit;
 ?>
