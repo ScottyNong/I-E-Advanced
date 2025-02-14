@@ -226,7 +226,40 @@ document.addEventListener("DOMContentLoaded", () => {
         wall.appendChild(postIt);
         postIt.focus();
     
-        savePostItToServer(); // Sauvegarde après création
+        console.log("Post-it créé :", postIt); // Vérification
+
+        savePostItToServer(postIt); // Vérifier que cette fonction reçoit bien un postIt valide
+    };
+    
+    const savePostItToServer = (postIt) => {
+        if (!postIt) {
+            console.error("Erreur : postIt est undefined");
+            return;
+        }
+    
+        const postData = {
+            content: postIt.value || "",  // Éviter l'erreur de lecture de `value`
+            x: postIt.style.left,
+            y: postIt.style.top,
+            color: postIt.style.backgroundColor,
+            userId: postIt.dataset.userId,
+            timestamp: postIt.dataset.timestamp
+        };
+    
+        fetch("save_postit.php", {
+            method: "POST",
+            body: JSON.stringify(postData),
+            headers: { "Content-Type": "application/json" }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                console.log("Post-it sauvegardé sur le serveur");
+            } else {
+                console.error("Erreur lors de la sauvegarde :", data.message);
+            }
+        })
+        .catch(error => console.error("Erreur réseau :", error));
     };
 
     // Vérifier si une position est occupée par un post-it
