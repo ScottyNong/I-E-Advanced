@@ -257,7 +257,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Fonction de suppression d'un post-it (si l'utilisateur est le propriétaire)
     deletePostitButton.onclick = () => {
-      if (activePostIt && (activePostIt.dataset.userId === currentUser.email || currentUser.email === 'sebastien.bonna@hotmail.com')) {
+      if (activePostIt.dataset.userId === currentUser.email || currentUser.email === 'sebastien.bonna@hotmail.com') {
         wall.removeChild(activePostIt); // Supprimer le post-it du mur
         postIts.splice(postIts.indexOf(activePostIt), 1); // Supprimer du tableau des post-its
         deletePostItFromServer(activePostIt); // Supprimer du serveur
