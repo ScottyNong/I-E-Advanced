@@ -442,24 +442,24 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function deletePostItFromServer(postIt) {
-  fetch("delete_postit.php", {
-    method: "DELETE",
-    body: JSON.stringify({
-      userId: postIt.dataset.userId,
-      timestamp: postIt.dataset.timestamp
-    }),
-    headers: {
-      "Content-Type": "application/json"
+      fetch("delete_postit.php", {
+        method: "DELETE",
+        body: JSON.stringify({
+          userId: postIt.dataset.userId,
+          timestamp: postIt.dataset.timestamp
+        }),
+        headers: {
+          "Content-Type": "application/json"
+        }
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Erreur lors de la suppression du post-it');
+        }
+        console.log("Post-it supprimé du serveur avec succès");
+      })
+      .catch(error => console.error("Erreur lors de la suppression :", error));
     }
-  })
-  .then(response => {
-    if (!response.ok) {
-      throw new Error('Erreur lors de la suppression du post-it');
-    }
-    console.log("Post-it supprimé du serveur avec succès");
-  })
-  .catch(error => console.error("Erreur lors de la suppression :", error));
-}
 
 });
  
