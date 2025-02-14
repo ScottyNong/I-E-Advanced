@@ -250,6 +250,11 @@ document.addEventListener("DOMContentLoaded", () => {
         menu.style.top = `${y}px`;
     };
 
+    // Fonction pour masquer un menu contextuel
+    const hideMenu = (menu) => {
+        menu.style.display = "none";
+    };
+
     // Fonction de suppression d'un post-it (si l'utilisateur est le propriétaire)
     deletePostitButton.onclick = () => {
       if (activePostIt && activePostIt.dataset.userId === currentUser.email) {
@@ -447,6 +452,9 @@ document.addEventListener("DOMContentLoaded", () => {
         loginForm.reset();
         errorMessage.style.display = "none";
     });
+
+    // Retour au mur depuis le menu du post-it
+    returnPostitButton.onclick = () => hideMenu(menuPostit);
 
     // Fonction pour ajouter un délai avant l'enregistrement
     function debounce(func, delay) {
