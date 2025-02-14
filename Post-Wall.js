@@ -194,7 +194,13 @@ document.addEventListener("DOMContentLoaded", () => {
         postIt.dataset.timestamp = new Date().toISOString();
 
         // Ajuster la taille automatiquement selon le texte
-        postIt.addEventListener("input", () => {
+        postIt.addEventListener("input", (e) => {
+        // Vérification si l'utilisateur est bien celui qui a créé le post-it
+        if (postIt.dataset.userId !== currentUser.email) {
+            alert("Vous ne pouvez pas modifier ce post-it.");
+            postIt.blur();  // Perdre le focus pour éviter la modification
+            return;  // On arrête l'exécution de la fonction pour ne pas enregistrer les changements
+        }
             postIt.style.height = "auto";
             postIt.style.width = "auto";
             postIt.style.height = postIt.scrollHeight + "px";
