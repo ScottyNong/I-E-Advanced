@@ -290,25 +290,43 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Chargement des post-its depuis le serveur
     function loadPostItsFromServer() {
-        fetch("load_postits.php")
-            .then(response => response.json())
-            .then(postItsData => {
-                postItsData.forEach(postItData => {
-                    const postIt = document.createElement("textarea");
-                    postIt.className = "post-it";
-                    console.log(postItData);
-                    postIt.value = postItData.content;
-                    postIt.style.backgroundColor = postItData.color;
-                    postIt.style.left = postItData.x;
-                    postIt.style.top = postItData.y;
-                    postIt.dataset.userId = postItData.userId;
-                    postIt.dataset.timestamp = postItData.timestamp;
-                    postIts.push(postIt);
-                    wall.appendChild(postIt);
-                    postIt.addEventListener("input", debounce(() => savePostItToServer(postIt), 200));
-                });
-            })
-            .catch(error => console.error("Erreur lors du chargement :", error));
+      fetch("load_postits.php")
+        .then(response => response.json())
+        .then(postItsData => {
+          postItsData.forEach(postItData => {
+            const postIt = document.createElement("textarea");
+            postIt.className = "post-it";
+            postIt.value = postItData.content;
+            postIt.style.backgroundColor = postItData.color;
+            postIt.style.left = postItData.x;
+            postIt.style.top = postItData.y;
+            postIt.dataset.userId = postItData.userId;
+            postIt.dataset.timestamp = postItData.timestamp;
+            postIt.dataset.originalContent = postItData.content;
+    
+            postIt.addEventListener("input", (e) => {
+              if (postIt.dataset.userId !== currentUser.email) {
+                alert("Vous ne pouvez pas modifier ce post-it.");
+                postIt.value = postIt.dataset.originalContent;
+                postIt.blur();
+                return;
+              }
+              postIt.style.height = "auto";
+              postIt.style.width = "auto";
+              postIt.style.height = postIt.scrollHeight + "px";
+              postIt.style.width = Math.min(postIt.scrollWidth + 20, 200) + "px";
+              savePostItToServer(postIt);
+            });
+    
+            postIt.addEventListener("blur", () => {
+              postIt.dataset.originalContent = postIt.value;
+            });
+    
+            postIts.push(postIt);
+            wall.appendChild(postIt);
+          });
+        })
+        .catch(error => console.error("Erreur lors du chargement :", error));
     }
     
     // Mise à jour du streak
