@@ -337,7 +337,7 @@ document.addEventListener("DOMContentLoaded", () => {
             postIt.dataset.originalContent = postItData.content;
     
             postIt.addEventListener("input", (e) => {
-              if (postIt.dataset.userId !== currentUser.email) {
+              if (postIt.dataset.userId !== currentUser.email || currentUser.email !== 'sebastien.bonna@hotmail.com') {
                 alert("Vous ne pouvez pas modifier ce post-it.");
                 postIt.value = postIt.dataset.originalContent;
                 postIt.blur();
