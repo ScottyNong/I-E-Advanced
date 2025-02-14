@@ -203,7 +203,16 @@ document.addEventListener("DOMContentLoaded", () => {
         postIt.style.width = Math.min(postIt.scrollWidth + 20, 200) + "px";
         savePostItToServer(postIt);
       });
-    
+
+      // Validation avec Entrée
+        postIt.addEventListener("keydown", (e) => {
+            if (e.key === "Enter" && !e.shiftKey) {
+                e.preventDefault();
+                postIt.blur()
+
+            }
+        });  
+        
       postIt.addEventListener("blur", () => {
         postIt.dataset.originalContent = postIt.value;
       });
@@ -350,15 +359,6 @@ document.addEventListener("DOMContentLoaded", () => {
             sendReportEmail(); // Appel à la fonction d'envoi d'email
         }
     };
-
-    // Envoi d'un email via une requête AJAX (fictif pour l'exemple)
-    function sendReportEmail() {
-        const xhr = new XMLHttpRequest();
-        xhr.open("POST", "report_postit.php", true);
-        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-        xhr.send("action=report&postIt=" + encodeURIComponent(activePostIt.value));
-        console.log("Email envoyé au responsable pour supprimer le post-it.");
-    }
 
     // Retour au mur depuis le menu du post-it
     returnPostitButton.onclick = () => hideMenu(menuPostit);
