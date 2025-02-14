@@ -1,4 +1,3 @@
-// Javascript test
 document.addEventListener("DOMContentLoaded", () => {
     // Sélection des éléments HTML
     const loginForm = document.getElementById("login-form");
@@ -251,22 +250,39 @@ document.addEventListener("DOMContentLoaded", () => {
         menu.style.top = `${y}px`;
     };
 
-    // Fonction pour masquer un menu contextuel
-    const hideMenu = (menu) => {
-        menu.style.display = "none";
-    };
-
     // Fonction de suppression d'un post-it (si l'utilisateur est le propriétaire)
     deletePostitButton.onclick = () => {
       if (activePostIt && activePostIt.dataset.userId === currentUser.email) {
-        wall.removeChild(activePostIt);
-        postIts.splice(postIts.indexOf(activePostIt), 1);
-        deletePostItFromServer(activePostIt);
-        hideMenu(menuPostit);
+        wall.removeChild(activePostIt); // Supprimer le post-it du mur
+        postIts.splice(postIts.indexOf(activePostIt), 1); // Supprimer du tableau des post-its
+        deletePostItFromServer(activePostIt); // Supprimer du serveur
+        hideMenu(menuPostit); // Masquer le menu
       } else {
         alert("Vous ne pouvez supprimer que vos propres post-its.");
       }
     };
+    
+    // Fonction pour supprimer un post-it du serveur
+    function deletePostItFromServer(postIt) {
+      fetch("delete_postit.php", {
+        method: "POST", // Utiliser POST car nous n'avons pas de requête DELETE
+        body: JSON.stringify({
+          userId: postIt.dataset.userId,
+          timestamp: postIt.dataset.timestamp
+        }),
+        headers: {
+          "Content-Type": "application/json"
+        }
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Erreur lors de la suppression du post-it');
+        }
+        console.log("Post-it supprimé du serveur avec succès");
+      })
+      .catch(error => console.error("Erreur lors de la suppression :", error));
+    }
+
 
 
     // Gestion du clic sur le mur pour créer un post-it
@@ -440,26 +456,5 @@ document.addEventListener("DOMContentLoaded", () => {
             timeout = setTimeout(() => func(...args), delay);
         };
     }
-
-    function deletePostItFromServer(postIt) {
-      fetch("delete_postit.php", {
-        method: "DELETE",
-        body: JSON.stringify({
-          userId: postIt.dataset.userId,
-          timestamp: postIt.dataset.timestamp
-        }),
-        headers: {
-          "Content-Type": "application/json"
-        }
-      })
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Erreur lors de la suppression du post-it');
-        }
-        console.log("Post-it supprimé du serveur avec succès");
-      })
-      .catch(error => console.error("Erreur lors de la suppression :", error));
-    }
-
 });
  
