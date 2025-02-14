@@ -359,9 +359,9 @@ document.addEventListener("DOMContentLoaded", () => {
               
             // Ajout de l'écouteur d'événements pour le menu contextuel
             postIt.addEventListener("click", (e) => {
-              activePostIt = postIt;
-              showMenu(menuPostit, e.clientX, e.clientY);
-            });
+                activePostIt = postIt;
+                showMenu(menuPostit, e.clientX, e.clientY);
+              });
           });
         })
         .catch(error => console.error("Erreur lors du chargement :", error));
