@@ -222,9 +222,8 @@ document.addEventListener("DOMContentLoaded", () => {
     
       updateStreak();
       savePostItToServer(postIt);
-    
-      console.log("Post-it créé :", postIt);
     };
+
     
 
 
@@ -305,6 +304,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }).catch(error => console.error("Erreur lors de la sauvegarde :", error));
       }
     }
+
 
 
     // Chargement des post-its depuis le serveur
