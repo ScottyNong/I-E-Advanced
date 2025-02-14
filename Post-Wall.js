@@ -225,7 +225,7 @@ document.addEventListener("DOMContentLoaded", () => {
         wall.appendChild(postIt);
         postIt.focus();
     
-        savePostItsToServer(postIt); // Sauvegarde après création
+        savePostItsToServer(); // Sauvegarde après création
     };
 
     // Vérifier si une position est occupée par un post-it
