@@ -183,6 +183,8 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
+        postIt.dataset.originalContent = '';
+        
         const postIt = document.createElement("textarea");
         postIt.className = "post-it";
         postIt.style.backgroundColor = currentColor;
@@ -193,18 +195,22 @@ document.addEventListener("DOMContentLoaded", () => {
         postIt.dataset.userId = currentUser.email;
         postIt.dataset.timestamp = new Date().toISOString();
 
-        // Ajuster la taille automatiquement selon le texte
         postIt.addEventListener("input", (e) => {
-        // Vérification si l'utilisateur est bien celui qui a créé le post-it
-        if (postIt.dataset.userId !== currentUser.email) {
+          if (postIt.dataset.userId !== currentUser.email) {
             alert("Vous ne pouvez pas modifier ce post-it.");
-            postIt.blur();  // Perdre le focus pour éviter la modification
-            return;  // On arrête l'exécution de la fonction pour ne pas enregistrer les changements
-        }
-            postIt.style.height = "auto";
-            postIt.style.width = "auto";
-            postIt.style.height = postIt.scrollHeight + "px";
-            postIt.style.width = Math.min(postIt.scrollWidth + 20, 200) + "px";
+            postIt.value = postIt.dataset.originalContent; // Restaurer le contenu original
+            postIt.blur(); // Perdre le focus
+            return;
+          }
+          
+          // Ajuster la taille automatiquement selon le texte
+          postIt.style.height = "auto";
+          postIt.style.width = "auto";
+          postIt.style.height = postIt.scrollHeight + "px";
+          postIt.style.width = Math.min(postIt.scrollWidth + 20, 200) + "px";
+          
+          // Sauvegarder les modifications
+          savePostItToServer(postIt);
         });
 
         // Validation avec Entrée
@@ -293,27 +299,35 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Sauvegarde d'un post-it sur le serveur
     function savePostItToServer(postIt) {
+      if (postIt.value.trim() === '') {
+        // Si le contenu est vide, supprimer le post-it
+        wall.removeChild(postIt);
+        postIts.splice(postIts.indexOf(postIt), 1);
+      } else {
+        // Sinon, sauvegarder le post-it
         fetch("save_postit.php", {
-            method: "POST",
-            body: JSON.stringify({
-                content: postIt.value,
-                x: postIt.style.left,
-                y: postIt.style.top,
-                color: postIt.style.backgroundColor,
-                userId: postIt.dataset.userId,
-                timestamp: postIt.dataset.timestamp
-            }),
-            headers: { "Content-Type": "application/json" }
+          method: "POST",
+          body: JSON.stringify({
+            content: postIt.value,
+            x: postIt.style.left,
+            y: postIt.style.top,
+            color: postIt.style.backgroundColor,
+            userId: postIt.dataset.userId,
+            timestamp: postIt.dataset.timestamp
+          }),
+          headers: { "Content-Type": "application/json" }
         }).catch(error => console.error("Erreur lors de la sauvegarde :", error));
+      }
     }
+
 
     // Chargement des post-its depuis le serveur
     function loadPostItsFromServer() {
         fetch("load_postits.php")
             .then(response => response.json())
             .then(postItsData => {
-                postItsData.forEach(postItData => {
-                    const postIt = document.createElement("textarea");
+              postItsData.forEach(postItData => {
+                const postIt = document.createElement("textarea");
                     postIt.className = "post-it";
                     console.log(postItData);
                     postIt.value = postItData.content;
@@ -322,6 +336,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     postIt.style.top = postItData.y;
                     postIt.dataset.userId = postItData.userId;
                     postIt.dataset.timestamp = postItData.timestamp;
+                    postIt.dataset.originalContent = postItData.content;
                     postIts.push(postIt);
                     wall.appendChild(postIt);
                     postIt.addEventListener("input", debounce(() => savePostItToServer(postIt), 200));
