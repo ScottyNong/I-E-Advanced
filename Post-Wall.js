@@ -205,11 +205,12 @@ document.addEventListener("DOMContentLoaded", () => {
         postIt.addEventListener("keydown", (e) => {
             if (e.key === "Enter" && !e.shiftKey) {
                 e.preventDefault();
-                postIt.blur();
-                postIt.addEventListener("blur", () => savePostItToServer(postIt));
+                postIt.blur()
 
             }
         });
+
+        postIt.addEventListener("blur", () => savePostItToServer(postIt));
 
         // Menu contextuel du post-it
         postIt.addEventListener("click", (e) => {
@@ -232,6 +233,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         savePostItToServer(postIt); // Vérifier que cette fonction reçoit bien un postIt valide
     };
+
 
     // Vérifier si une position est occupée par un post-it
     const isPositionOccupied = (x, y) => {
@@ -314,11 +316,9 @@ document.addEventListener("DOMContentLoaded", () => {
                     postIt.style.top = postItData.y;
                     postIt.dataset.userId = postItData.userId;
                     postIt.dataset.timestamp = postItData.timestamp;
-
-                    postIt.addEventListener("input", debounce(() => savePostItToServer(postIt), 500));
-
                     postIts.push(postIt);
                     wall.appendChild(postIt);
+                    postIt.addEventListener("input", debounce(() => savePostItToServer(postIt), 200));
                 });
             })
             .catch(error => console.error("Erreur lors du chargement :", error));
