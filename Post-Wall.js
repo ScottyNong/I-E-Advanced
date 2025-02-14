@@ -1,4 +1,4 @@
-
+// Javascript test
 document.addEventListener("DOMContentLoaded", () => {
     // Sélection des éléments HTML
     const loginForm = document.getElementById("login-form");
