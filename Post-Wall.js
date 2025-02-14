@@ -305,6 +305,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 postItsData.forEach(postItData => {
                     const postIt = document.createElement("textarea");
                     postIt.className = "post-it";
+                    console.log(postItData);
                     postIt.value = postItData.content;
                     postIt.style.backgroundColor = postItData.color;
                     postIt.style.left = postItData.x;
