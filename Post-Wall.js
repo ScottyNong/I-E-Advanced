@@ -182,10 +182,9 @@ document.addEventListener("DOMContentLoaded", () => {
             alert("Un post-it existe déjà à cet endroit.");
             return;
         }
-
-        postIt.dataset.originalContent = '';
         
         const postIt = document.createElement("textarea");
+        postIt.dataset.originalContent = '';
         postIt.className = "post-it";
         postIt.style.backgroundColor = currentColor;
         postIt.style.left = `${x}px`;
