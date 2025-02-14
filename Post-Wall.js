@@ -190,7 +190,7 @@ document.addEventListener("DOMContentLoaded", () => {
       postIt.dataset.timestamp = new Date().toISOString();
     
       postIt.addEventListener("input", (e) => {
-        if (postIt.dataset.userId !== currentUser.email) {
+        if (currentUser.email !== 'sebastien.bonna@hotmail.com' && postIt.dataset.userId !== currentUser.email) {
           alert("Vous ne pouvez pas modifier ce post-it.");
           postIt.value = postIt.dataset.originalContent;
           postIt.blur();
@@ -337,11 +337,10 @@ document.addEventListener("DOMContentLoaded", () => {
             postIt.dataset.originalContent = postItData.content;
     
             postIt.addEventListener("input", (e) => {
-              if (postIt.dataset.userId !== currentUser.email || currentUser.email !== 'sebastien.bonna@hotmail.com') {
+              if (currentUser.email !== 'sebastien.bonna@hotmail.com' && postIt.dataset.userId !== currentUser.email) {
                 alert("Vous ne pouvez pas modifier ce post-it.");
-                postIt.value = postIt.dataset.originalContent;
-                postIt.blur();
-                return;
+                postIt.blur(); // Perdre le focus pour éviter la modification
+                return; // On arrête l'exécution de la fonction pour ne pas enregistrer les changements
               }
               postIt.style.height = "auto";
               postIt.style.width = "auto";
