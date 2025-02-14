@@ -343,11 +343,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 postIt.blur();
                 return;
               }
-            // Ajout de l'écouteur d'événements pour le menu contextuel
-            postIt.addEventListener("click", (e) => {
-              activePostIt = postIt;
-              showMenu(menuPostit, e.clientX, e.clientY);
-            });
               postIt.style.height = "auto";
               postIt.style.width = "auto";
               postIt.style.height = postIt.scrollHeight + "px";
@@ -361,6 +356,12 @@ document.addEventListener("DOMContentLoaded", () => {
     
             postIts.push(postIt);
             wall.appendChild(postIt);
+              
+            // Ajout de l'écouteur d'événements pour le menu contextuel
+            postIt.addEventListener("click", (e) => {
+              activePostIt = postIt;
+              showMenu(menuPostit, e.clientX, e.clientY);
+            });
           });
         })
         .catch(error => console.error("Erreur lors du chargement :", error));
