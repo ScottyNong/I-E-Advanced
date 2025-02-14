@@ -258,14 +258,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Fonction de suppression d'un post-it (si l'utilisateur est le propriétaire)
     deletePostitButton.onclick = () => {
-        if (activePostIt && activePostIt.dataset.userId === currentUser.email) {
-            wall.removeChild(activePostIt); // Supprimer le post-it du mur
-            postIts.splice(postIts.indexOf(activePostIt), 1); // Supprimer du tableau des post-its
-            hideMenu(menuPostit); // Masquer le menu
-        } else {
-            alert("Vous ne pouvez supprimer que vos propres post-its.");
-        }
+      if (activePostIt && activePostIt.dataset.userId === currentUser.email) {
+        wall.removeChild(activePostIt);
+        postIts.splice(postIts.indexOf(activePostIt), 1);
+        deletePostItFromServer(activePostIt);
+        hideMenu(menuPostit);
+      } else {
+        alert("Vous ne pouvez supprimer que vos propres post-its.");
+      }
     };
+
 
     // Gestion du clic sur le mur pour créer un post-it
     wall.addEventListener("click", (e) => {
@@ -431,12 +433,33 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     // Fonction pour ajouter un délai avant l'enregistrement
-function debounce(func, delay) {
-    let timeout;
-    return (...args) => {
-        clearTimeout(timeout);
-        timeout = setTimeout(() => func(...args), delay);
-    };
+    function debounce(func, delay) {
+        let timeout;
+        return (...args) => {
+            clearTimeout(timeout);
+            timeout = setTimeout(() => func(...args), delay);
+        };
+    }
+
+    function deletePostItFromServer(postIt) {
+  fetch("delete_postit.php", {
+    method: "DELETE",
+    body: JSON.stringify({
+      userId: postIt.dataset.userId,
+      timestamp: postIt.dataset.timestamp
+    }),
+    headers: {
+      "Content-Type": "application/json"
+    }
+  })
+  .then(response => {
+    if (!response.ok) {
+      throw new Error('Erreur lors de la suppression du post-it');
+    }
+    console.log("Post-it supprimé du serveur avec succès");
+  })
+  .catch(error => console.error("Erreur lors de la suppression :", error));
 }
+
 });
  
