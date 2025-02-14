@@ -1,3 +1,4 @@
+
 document.addEventListener("DOMContentLoaded", () => {
     // Sélection des éléments HTML
     const loginForm = document.getElementById("login-form");
@@ -419,3 +420,4 @@ document.addEventListener("DOMContentLoaded", () => {
         errorMessage.style.display = "none";
     });
 });
+ 
