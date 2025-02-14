@@ -343,6 +343,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 postIt.blur();
                 return;
               }
+            // Ajout de l'écouteur d'événements pour le menu contextuel
+            postIt.addEventListener("click", (e) => {
+              activePostIt = postIt;
+              showMenu(menuPostit, e.clientX, e.clientY);
+            });
               postIt.style.height = "auto";
               postIt.style.width = "auto";
               postIt.style.height = postIt.scrollHeight + "px";
