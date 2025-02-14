@@ -177,73 +177,55 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Création d'un post-it
     const createPostIt = (x, y) => {
-        // Vérifier si la position est déjà occupée par un post-it
-        if (isPositionOccupied(x, y)) {
-            alert("Un post-it existe déjà à cet endroit.");
-            return;
-        }
-        
-        const postIt = document.createElement("textarea");
-        postIt.dataset.originalContent = '';
-        postIt.className = "post-it";
-        postIt.style.backgroundColor = currentColor;
-        postIt.style.left = `${x}px`;
-        postIt.style.top = `${y}px`;
-
-        // Ajouter un identifiant unique pour l'utilisateur et le post-it
-        postIt.dataset.userId = currentUser.email;
-        postIt.dataset.timestamp = new Date().toISOString();
-
-        postIt.addEventListener("input", (e) => {
-          if (postIt.dataset.userId !== currentUser.email) {
-            alert("Vous ne pouvez pas modifier ce post-it.");
-            postIt.value = postIt.dataset.originalContent; // Restaurer le contenu original
-            postIt.blur(); // Perdre le focus
-            return;
-          }
-          
-          // Ajuster la taille automatiquement selon le texte
-          postIt.style.height = "auto";
-          postIt.style.width = "auto";
-          postIt.style.height = postIt.scrollHeight + "px";
-          postIt.style.width = Math.min(postIt.scrollWidth + 20, 200) + "px";
-          
-          // Sauvegarder les modifications
-          savePostItToServer(postIt);
-        });
-
-        // Validation avec Entrée
-        postIt.addEventListener("keydown", (e) => {
-            if (e.key === "Enter" && !e.shiftKey) {
-                e.preventDefault();
-                postIt.blur()
-
-            }
-        });
-
-        postIt.addEventListener("blur", () => savePostItToServer(postIt));
-
-        // Menu contextuel du post-it
-        postIt.addEventListener("click", (e) => {
-            activePostIt = postIt;
-            showMenu(menuPostit, e.clientX, e.clientY);
-        });
-
-        postIts.push(postIt); // Ajouter le post-it à la liste
-        wall.appendChild(postIt); // Ajouter le post-it au mur
-        postIt.focus(); // Mettre le focus sur le post-it
-
-        // Mettre à jour le streak (on ajoute un jour si c'est un nouveau post-it)
-        updateStreak();
-
-        postIts.push(postIt);
-        wall.appendChild(postIt);
-        postIt.focus();
+      if (isPositionOccupied(x, y)) {
+        alert("Un post-it existe déjà à cet endroit.");
+        return;
+      }
     
-        console.log("Post-it créé :", postIt); // Vérification
-
-        savePostItToServer(postIt); // Vérifier que cette fonction reçoit bien un postIt valide
+      const postIt = document.createElement("textarea");
+      postIt.className = "post-it";
+      postIt.style.backgroundColor = currentColor;
+      postIt.style.left = `${x}px`;
+      postIt.style.top = `${y}px`;
+      postIt.dataset.userId = currentUser.email;
+      postIt.dataset.timestamp = new Date().toISOString();
+    
+      postIt.addEventListener("input", (e) => {
+        if (postIt.dataset.userId !== currentUser.email) {
+          alert("Vous ne pouvez pas modifier ce post-it.");
+          postIt.blur();
+          return;
+        }
+        postIt.style.height = "auto";
+        postIt.style.width = "auto";
+        postIt.style.height = postIt.scrollHeight + "px";
+        postIt.style.width = Math.min(postIt.scrollWidth + 20, 200) + "px";
+      });
+    
+      postIt.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" && !e.shiftKey) {
+          e.preventDefault();
+          postIt.blur();
+        }
+      });
+    
+      postIt.addEventListener("blur", () => savePostItToServer(postIt));
+    
+      postIt.addEventListener("click", (e) => {
+        activePostIt = postIt;
+        showMenu(menuPostit, e.clientX, e.clientY);
+      });
+    
+      postIts.push(postIt);
+      wall.appendChild(postIt);
+      postIt.focus();
+    
+      updateStreak();
+      savePostItToServer(postIt);
+    
+      console.log("Post-it créé :", postIt);
     };
+    
 
 
     // Vérifier si une position est occupée par un post-it
@@ -300,8 +282,13 @@ document.addEventListener("DOMContentLoaded", () => {
     function savePostItToServer(postIt) {
       if (postIt.value.trim() === '') {
         // Si le contenu est vide, supprimer le post-it
-        wall.removeChild(postIt);
-        postIts.splice(postIts.indexOf(postIt), 1);
+        if (postIt.parentNode === wall) {
+          wall.removeChild(postIt);
+        }
+        const index = postIts.indexOf(postIt);
+        if (index > -1) {
+          postIts.splice(index, 1);
+        }
       } else {
         // Sinon, sauvegarder le post-it
         fetch("save_postit.php", {
