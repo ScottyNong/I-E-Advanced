@@ -206,6 +206,8 @@ document.addEventListener("DOMContentLoaded", () => {
             if (e.key === "Enter" && !e.shiftKey) {
                 e.preventDefault();
                 postIt.blur();
+                postIt.addEventListener("blur", () => savePostItToServer(postIt));
+
             }
         });
 
@@ -313,7 +315,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     postIt.dataset.userId = postItData.userId;
                     postIt.dataset.timestamp = postItData.timestamp;
 
-                    postIt.addEventListener("input", () => savePostItToServer(postIt));
+                    postIt.addEventListener("input", debounce(() => savePostItToServer(postIt), 500));
 
                     postIts.push(postIt);
                     wall.appendChild(postIt);
@@ -422,5 +424,14 @@ document.addEventListener("DOMContentLoaded", () => {
         loginForm.reset();
         errorMessage.style.display = "none";
     });
+
+    // Fonction pour ajouter un délai avant l'enregistrement
+function debounce(func, delay) {
+    let timeout;
+    return (...args) => {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => func(...args), delay);
+    };
+}
 });
  
