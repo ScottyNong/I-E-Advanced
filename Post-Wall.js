@@ -472,5 +472,5 @@ document.addEventListener("DOMContentLoaded", () => {
             timeout = setTimeout(() => func(...args), delay);
         };
     }
-}
+})
  
