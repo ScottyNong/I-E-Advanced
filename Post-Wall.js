@@ -75,7 +75,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 errorMessage.textContent = "Email ou mot de passe incorrect. Utilisez 'Première Connexion' pour créer un compte.";
             } else {
                 // Si la connexion est réussie
-                currentUser = email;
+                currentUser = {email};
                 localStorage.setItem("userEmail", currentUser);
                 loginContainer.style.display = "none"; // Masquer la page de connexion
                 wallContainer.style.display = "block"; // Afficher le mur interactif
