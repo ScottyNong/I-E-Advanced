@@ -1,53 +1,31 @@
 <?php
+// URL de ton script Google Apps Script
+$scriptURL = "https://script.google.com/macros/s/AKfycbyxp2lKC-nin0fKENStl6M4uvPnaO6OvGYIOOpSASTpMgaedER3DsgwYM2C5N-Ozwk9/exec";
+
 // Récupération des données envoyées via POST
 $data = json_decode(file_get_contents("php://input"), true);
 
-// Vérification si les données sont présentes
 if (isset($data['email']) && isset($data['password'])) {
     $email = $data['email'];
-    $password = password_hash($data['password'], PASSWORD_DEFAULT); // Hashage du mot de passe pour plus de sécurité
+    $password = password_hash($data['password'], PASSWORD_DEFAULT);
 
-    // Vérifier si le fichier user.csv est accessible
-    $csvData = array_map("str_getcsv", file("https://docs.google.com/uc?export=download&id=1U3BC9BZm7uqAnIkrITf0mqrAHvADApRa0gKGXRfMIDs"));
-    $userExist = false;
+    // Envoyer les données au script Google Apps Script
+    $postData = http_build_query(["email" => $email, "password" => $password]);
+    $opts = [
+        "http" => [
+            "method" => "POST",
+            "header" => "Content-Type: application/x-www-form-urlencoded",
+            "content" => $postData
+        ]
+    ];
+    $context = stream_context_create($opts);
+    $response = file_get_contents($scriptURL, false, $context);
 
-    // Ouvrir le fichier user.csv en lecture pour vérifier si l'email existe déjà
-    if (($handle = fopen($file, "r")) !== FALSE) {
-        while (($row = fgetcsv($handle)) !== FALSE) {
-            if ($row[0] === $email) {  // Vérification de l'email
-                $userExist = true;
-                break;
-            }
-        }
-        fclose($handle);
-    }
-
-    // Si l'email existe déjà, renvoyer un message d'erreur
-    if ($userExist) {
-        echo json_encode([
-            "success" => false,
-            "message" => "Cet email est déjà utilisé. Veuillez en choisir un autre."
-        ]);
-    } else {
-        // Si l'utilisateur n'existe pas, on l'ajoute au fichier CSV
-        if (($handle = fopen($file, "a")) !== FALSE) {
-            fputcsv($handle, [$email, $password]);  // Enregistrer email et mot de passe
-            fclose($handle);
-            echo json_encode([
-                "success" => true,
-                "message" => "Utilisateur créé avec succès. Vous pouvez maintenant vous connecter."
-            ]);
-        } else {
-            echo json_encode([
-                "success" => false,
-                "message" => "Erreur lors de l'enregistrement de l'utilisateur."
-            ]);
-        }
-    }
+    echo $response; // Retourne la réponse du script Google Apps Script
 } else {
     echo json_encode([
         "success" => false,
-        "message" => "Email et mot de passe sont requis."
+        "message" => "Email et mot de passe requis."
     ]);
 }
 ?>
