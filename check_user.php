@@ -66,5 +66,6 @@ if (!isset($jsonResponse['user'])) {
 }
 
 // Tout est bon, on renvoie la réponse originale du script Google Apps
+echo $reponse;
 echo json_encode(["success" => true, "user" => $jsonResponse['user']]);
 ?>
