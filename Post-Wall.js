@@ -65,12 +65,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 "Content-Type": "application/json"
             }
         })
-        .then(response => response.json())
+        .then(response => response.json())  // Une seule fois pour obtenir les données JSON
         .then(data => {
             console.log("Réponse du serveur:", data);
-        })
-        .then(response => response.json())
-        .then(data => {
+        
+            // Vérifie s'il y a une erreur dans la réponse
             if (data.error) {
                 errorMessage.style.display = "block";
                 errorMessage.textContent = "Email ou mot de passe incorrect. Utilisez 'Première Connexion' pour créer un compte.";
@@ -87,7 +86,7 @@ document.addEventListener("DOMContentLoaded", () => {
         .catch(error => {
             console.error("Erreur lors de la connexion :", error);
         });
-    });
+
 
     // 4. Création d'un compte lors de la première connexion
     firstConnectionButton.addEventListener("click", () => {
