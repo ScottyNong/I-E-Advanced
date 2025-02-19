@@ -67,6 +67,10 @@ document.addEventListener("DOMContentLoaded", () => {
         })
         .then(response => response.json())
         .then(data => {
+            console.log("Réponse du serveur:", data);
+        })
+        .then(response => response.json())
+        .then(data => {
             if (data.error) {
                 errorMessage.style.display = "block";
                 errorMessage.textContent = "Email ou mot de passe incorrect. Utilisez 'Première Connexion' pour créer un compte.";
