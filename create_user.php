@@ -1,6 +1,6 @@
 <?php
 // URL de ton script Google Apps Script
-$scriptURL = "https://script.google.com/macros/s/AKfycbyxp2lKC-nin0fKENStl6M4uvPnaO6OvGYIOOpSASTpMgaedER3DsgwYM2C5N-Ozwk9/exec";
+$scriptURL = "https://script.google.com/macros/s/AKfycbzOd4aysWx9b5LrNDmcfRlODHWeysMWTkidGQBza_ktBIhWmEsDM8NLur10vcz_xY5q/exec";
 
 // Récupération des données envoyées via POST
 $data = json_decode(file_get_contents("php://input"), true);
