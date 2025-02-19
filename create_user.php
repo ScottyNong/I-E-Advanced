@@ -8,8 +8,7 @@ if (isset($data['email']) && isset($data['password'])) {
     $password = password_hash($data['password'], PASSWORD_DEFAULT); // Hashage du mot de passe pour plus de sécurité
 
     // Vérifier si le fichier user.csv est accessible
-    $csvData = array_map("str_getcsv", file("https://docs.google.com/spreadsheets/d/1U3BC9BZm7uqAnIkrITf0mqrAHvADApRa0gKGXRfMIDs/edit?usp=drive_link"));
-
+    $csvData = array_map("str_getcsv", file("https://docs.google.com/uc?export=download&id=1U3BC9BZm7uqAnIkrITf0mqrAHvADApRa0gKGXRfMIDs"));
     $userExist = false;
 
     // Ouvrir le fichier user.csv en lecture pour vérifier si l'email existe déjà
