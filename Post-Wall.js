@@ -86,7 +86,7 @@ document.addEventListener("DOMContentLoaded", () => {
         .catch(error => {
             console.error("Erreur lors de la connexion :", error);
         });
-    }
+    });
 
     // 4. Création d'un compte lors de la première connexion
     firstConnectionButton.addEventListener("click", () => {
