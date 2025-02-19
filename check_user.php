@@ -10,7 +10,7 @@ if (isset($data['email']) && isset($data['password'])) {
     $password = $data['password'];
 
     // Vérifier si le fichier user.csv est accessible
-    $file = 'user.csv';
+    $csvData = array_map("str_getcsv", file("https://docs.google.com/spreadsheets/d/1U3BC9BZm7uqAnIkrITf0mqrAHvADApRa0gKGXRfMIDs/edit?usp=drive_link"));
     if (!file_exists($file)) {
         echo json_encode(["error" => true, "message" => "Le fichier des utilisateurs est manquant."]);
         exit;
