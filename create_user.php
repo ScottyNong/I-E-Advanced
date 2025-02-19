@@ -7,7 +7,7 @@ $data = json_decode(file_get_contents("php://input"), true);
 
 if (isset($data['email']) && isset($data['password'])) {
     $email = $data['email'];
-    $password = password_hash($data['password'], PASSWORD_DEFAULT); // Hashage du mot de passe
+    $password = hash("sha256", $data['password'])
 
     // Préparer les données pour l'envoi au script Google Apps
     $postData = json_encode([
