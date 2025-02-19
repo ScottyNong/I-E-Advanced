@@ -45,8 +45,6 @@ $opts = [
 $context = stream_context_create($opts);
 $response = file_get_contents($scriptURL, false, $context);
 
-error_log("Réponse Google Apps Script: " . $response);
-
 // Vérification de la réponse
 if ($response === false) {
     echo json_encode(["success" => false, "message" => "Erreur de connexion à Google Apps Script."]);
@@ -68,6 +66,5 @@ if (!isset($jsonResponse['user'])) {
 }
 
 // Tout est bon, on renvoie la réponse originale du script Google Apps
-echo $reponse;
 echo json_encode(["success" => true, "user" => $jsonResponse['user']]);
 ?>
